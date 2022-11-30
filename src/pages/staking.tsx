@@ -20,11 +20,15 @@ import {
   StatLabel,
   StatNumber,
   StatHelpText,
+  Text,
   useToast,
   useDisclosure,
   NumberInputField,
   NumberInput,
+  HStack,
+  Stack,
 } from "@chakra-ui/react";
+import { AiOutlineArrowRight } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../app/redux/hooks";
 import {
   registerCoin,
@@ -54,12 +58,12 @@ const Staking: NextPage = () => {
 
   const time = Date.now();
   let date = new Date(Date.now()).toUTCString();
-  const tgeTimeEpoch = 1669852800000;
+  const tgeTimeEpoch = 1669888800000;
   const daysAfterTge = Math.floor((time - tgeTimeEpoch) / 86400000);
   const apy = 1.00092226;
   const tALTBalance =
     balance.find((token) => token.tokenName == "tALT")?.amount ?? 0;
-  const earned = tALTBalance * (apy ** daysAfterTge - 1);
+  const earned = tALTBalance * apy ** daysAfterTge;
 
   useEffect(() => {
     getInfo(address);
@@ -116,19 +120,45 @@ const Staking: NextPage = () => {
     const [value, setValue] = useState("0");
     return ALTReg ? (
       <>
-        <Button onClick={onOpen}>Withdraw</Button>
+        <Button onClick={onOpen}>Convert</Button>
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Withdraw</ModalHeader>
+            <ModalHeader>Convert</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <Heading size={"sm"} mb={2}>
-                Please enter withdrawal amount:
+                Please enter convert amount:
               </Heading>
-              <NumberInput onChange={(valueString) => setValue(valueString)}>
-                <NumberInputField />
-              </NumberInput>
+              <HStack>
+                <Text>tALT:</Text>
+                <NumberInput
+                  onChange={(valueString) => setValue(valueString)}
+                  value={value}
+                >
+                  <NumberInputField />
+                </NumberInput>
+                <AiOutlineArrowRight />
+                <Text>ALT:</Text>
+                <NumberInput
+                  onChange={(valueString) =>
+                    setValue(
+                      (Number(valueString) / apy ** daysAfterTge).toString()
+                    )
+                  }
+                  value={(Number(value) * apy ** daysAfterTge).toString()}
+                >
+                  <NumberInputField />
+                </NumberInput>
+              </HStack>
+              <Text fontSize={"11px"} color="grey" mt={2}>
+                Be aware: After you withdraw to $ALT, you cannot stake in the
+                TGE Contract anymore and take advantage of the 40% APY.
+              </Text>
+              <Text fontSize={"11px"} color="grey" mt={2}>
+                The above amounts are estimations, please refer to wallet
+                transaction for exact amounts.
+              </Text>
             </ModalBody>
 
             <ModalFooter>
@@ -152,7 +182,7 @@ const Staking: NextPage = () => {
                   onClose();
                 }}
               >
-                Withdraw
+                Convert
               </Button>
             </ModalFooter>
           </ModalContent>
@@ -210,7 +240,7 @@ const Staking: NextPage = () => {
                 </StatHelpText>
               </Stat>
               <Stat>
-                <StatLabel>Est. Earnings</StatLabel>
+                <StatLabel>Est. ALT</StatLabel>
                 <StatNumber>{earned} ALT</StatNumber>
                 <StatHelpText>
                   {isConnected

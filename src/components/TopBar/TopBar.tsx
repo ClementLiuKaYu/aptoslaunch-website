@@ -1,4 +1,4 @@
-import { MouseEventHandler, PropsWithChildren } from "react";
+import { MouseEventHandler, PropsWithChildren, useEffect } from "react";
 import NextLink from "next/link";
 import Image, { StaticImageData } from "next/image";
 import {
@@ -28,6 +28,8 @@ import {
   useDisclosure,
   SimpleGrid,
   Text,
+  Circle,
+  Stack,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -63,13 +65,15 @@ const TopBar = () => {
       // zIndex={2}
     >
       <HStack justify={"space-between"}>
-        <Box pt={2}>
-          <Image
-            src={useColorModeValue(logoBlack, logoWhite)}
-            alt="AptosLaunch Main Logo"
-            width={224}
-            height={33}
-          />
+        <Box pt={2} _hover={{ cursor: "pointer" }}>
+          <NextLink href="/">
+            <Image
+              src={useColorModeValue(logoBlack, logoWhite)}
+              alt="AptosLaunch Main Logo"
+              width={224}
+              height={33}
+            />
+          </NextLink>
         </Box>
         {/* <Box>
           <InputGroup display={{ base: "none", md: "block" }}>
@@ -96,7 +100,7 @@ const TopBar = () => {
               Launch App
             </LinkItem> */}
             <ConnectButton />
-            <ColorModeSwitch />
+            {/* <ColorModeSwitch /> */}
           </Box>
           {/* add change dark light */}
           <Box display={{ base: "inline-block", md: "none" }}>
@@ -149,6 +153,13 @@ const LinkItem = ({
 
 const ConnectButton = () => {
   const wallet = useAppSelector((state) => state.application.wallet);
+  const balance = useAppSelector((state) => state.application.balance);
+  const APTBalance =
+    balance.find((token: any) => token.tokenName == "APT")?.amount ?? 0;
+  const tALTBalance =
+    balance.find((token: any) => token.tokenName == "tALT")?.amount ?? 0;
+  const ALTBalance =
+    balance.find((token: any) => token.tokenName == "ALT")?.amount ?? 0;
   const dispatch = useAppDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -221,17 +232,35 @@ const ConnectButton = () => {
       <MenuList>
         <MenuItem>
           <HStack>
-            <Text>APT</Text>
+            <Circle size="40px" mr={2} bg="white"></Circle>
+            <Stack>
+              <Text>APT</Text>
+              <Text fontSize="12px" fontWeight="700">
+                {APTBalance}
+              </Text>
+            </Stack>
           </HStack>
         </MenuItem>
         <MenuItem>
           <HStack>
-            <Text>tALT</Text>
+            <Circle size="40px" mr={2} bg="white"></Circle>
+            <Stack>
+              <Text>tALT</Text>
+              <Text fontSize="12px" fontWeight="700">
+                {tALTBalance}
+              </Text>
+            </Stack>
           </HStack>
         </MenuItem>
         <MenuItem>
           <HStack>
-            <Text>ALT</Text>
+            <Circle size="40px" mr={2} bg="white"></Circle>
+            <Stack>
+              <Text>ALT</Text>
+              <Text fontSize="12px" fontWeight="700">
+                {ALTBalance}
+              </Text>
+            </Stack>
           </HStack>
         </MenuItem>
         <MenuDivider />

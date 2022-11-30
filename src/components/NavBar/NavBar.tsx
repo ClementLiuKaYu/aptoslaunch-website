@@ -6,6 +6,8 @@ import {
   Divider,
   Flex,
   Link,
+  LinkBox,
+  LinkOverlay,
   Spacer,
   SimpleGrid,
   Text,
@@ -16,6 +18,7 @@ import { FaTwitter, FaDiscord, FaLink, FaCoins } from "react-icons/fa";
 import { SiGitbook } from "react-icons/si";
 import { BsFillPiggyBankFill } from "react-icons/bs";
 import { AiTwotoneBank } from "react-icons/ai";
+import { externalLinks } from "../../app/constants";
 
 type NavBarProps = { path: string };
 
@@ -48,38 +51,46 @@ const NavBar = (props: NavBarProps) => {
         <Spacer />
         <Divider />
         <SimpleGrid columns={2} spacing={3} p={3}>
-          <Box
+          <LinkBox
             as={Button}
             bg="#1DA1F2"
             _hover={{ bg: "#1DA1F2bb" }}
             leftIcon={<FaTwitter />}
           >
-            Twitter
-          </Box>
-          <Box
+            <LinkOverlay href={externalLinks.twitter} target="_blank">
+              Twitter
+            </LinkOverlay>
+          </LinkBox>
+          <LinkBox
             as={Button}
             bg="#7289DA"
             _hover={{ bg: "#7289DAbb" }}
             leftIcon={<FaDiscord />}
           >
-            Discord
-          </Box>
-          <Box
+            <LinkOverlay href={externalLinks.discord} target="_blank">
+              Discord
+            </LinkOverlay>
+          </LinkBox>
+          <LinkBox
             as={Button}
             bg="#f1502f"
             _hover={{ bg: "#f1502fbb" }}
             leftIcon={<SiGitbook />}
           >
-            Gitbook
-          </Box>
-          <Box
+            <LinkOverlay href={externalLinks.doc} target="_blank">
+              Gitbook
+            </LinkOverlay>
+          </LinkBox>
+          <LinkBox
             as={Button}
             bg="#008000"
             _hover={{ bg: "#008000bb" }}
             leftIcon={<FaLink />}
           >
-            Linktree
-          </Box>
+            <LinkOverlay href={externalLinks.linktree} target="_blank">
+              Linktree
+            </LinkOverlay>
+          </LinkBox>
         </SimpleGrid>
       </Flex>
       <Divider
